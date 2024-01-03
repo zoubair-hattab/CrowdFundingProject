@@ -11,9 +11,7 @@ module.exports = {
     },
     polygon_mumbai: {
       url: 'https://rpc.ankr.com/polygon_mumbai',
-      accounts: [
-        `0e732ee3048e0dddf4572c0f02a270bae041da444d0717afa993cc6fb8da630a`,
-      ],
+      accounts: [`your private key `],
     },
   },
 };
