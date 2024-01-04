@@ -28,7 +28,7 @@ export const projectReducer = (state = initialState, action) => {
       const { projectId, amount } = action.payload;
       var updatedState = state.projects.map((data) => {
         if (data.address === projectId) {
-          data['progress'] =
+          data['currentAmount'] =
             parseFloat(data.currentAmount) + parseFloat(weiToEther(amount));
         }
         return data;

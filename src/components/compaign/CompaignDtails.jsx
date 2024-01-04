@@ -60,53 +60,55 @@ const CompaignDtails = ({ data, setPoPup }) => {
                 {data?.description}
               </p>
               <table className="w-full">
-                <tr className="border  border-gray-200">
-                  <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2   text-sm tracking-wide ">
-                    Target Amount
-                  </th>
-                  <td className="text-sm text-blue-600 text-center">
-                    {data?.goalAmount} ETH
-                  </td>
-                </tr>
-                <tr className="border  border-gray-200">
-                  <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2">
-                    Minimum Contribution
-                  </th>
-                  <td className="text-sm text-blue-600 text-center">
-                    {data?.minContribution} ETH
-                  </td>
-                </tr>
+                <tbody>
+                  <tr className="border  border-gray-200">
+                    <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2   text-sm tracking-wide ">
+                      Target Amount
+                    </th>
+                    <td className="text-sm text-blue-600 text-center">
+                      {data?.goalAmount} ETH
+                    </td>
+                  </tr>
+                  <tr className="border  border-gray-200">
+                    <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2">
+                      Minimum Contribution
+                    </th>
+                    <td className="text-sm text-blue-600 text-center">
+                      {data?.minContribution} ETH
+                    </td>
+                  </tr>
 
-                <tr className="border  border-gray-200">
-                  <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2">
-                    Current Amount
-                  </th>
-                  <td className="text-sm text-blue-600 text-center">
-                    {data?.currentAmount} ETH
-                  </td>
-                </tr>
-                <tr className="border  border-gray-200">
-                  <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2">
-                    Number Of Contributor
-                  </th>
-                  <td className="text-sm text-blue-600 text-center">0 </td>
-                </tr>
-                <tr className="border  border-gray-200">
-                  <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2">
-                    Current Amount
-                  </th>
-                  <td className="text-sm text-blue-600 text-center">
-                    {data?.currentAmount} ETH
-                  </td>
-                </tr>
-                <tr className="border  border-gray-200">
-                  <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2   text-sm tracking-wide">
-                    DeadLine
-                  </th>
-                  <td className="text-sm text-blue-600 text-center">
-                    {days}d:{hours}h:{minutes}m:{seconds}s
-                  </td>
-                </tr>
+                  <tr className="border  border-gray-200">
+                    <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2">
+                      Current Amount
+                    </th>
+                    <td className="text-sm text-blue-600 text-center">
+                      {data?.currentAmount} ETH
+                    </td>
+                  </tr>
+                  <tr className="border  border-gray-200">
+                    <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2">
+                      Number Of Contributor
+                    </th>
+                    <td className="text-sm text-blue-600 text-center">0 </td>
+                  </tr>
+                  <tr className="border  border-gray-200">
+                    <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2">
+                      Current Amount
+                    </th>
+                    <td className="text-sm text-blue-600 text-center">
+                      {data?.currentAmount} ETH
+                    </td>
+                  </tr>
+                  <tr className="border  border-gray-200">
+                    <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2   text-sm tracking-wide">
+                      DeadLine
+                    </th>
+                    <td className="text-sm text-blue-600 text-center">
+                      {days}d:{hours}h:{minutes}m:{seconds}s
+                    </td>
+                  </tr>
+                </tbody>
               </table>
 
               <div>

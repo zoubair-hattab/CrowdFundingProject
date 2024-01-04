@@ -25,8 +25,8 @@ const HomePage = () => {
       <SubNavBar />
       <div className="container py-8">
         <div className="grid gap-7 md:gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-          {currentPosts?.map((item, index) => (
-            <Compaign data={item} key={index} />
+          {projectsData?.map((item, index) => (
+            <Compaign data={item} key={item.address} />
           ))}
         </div>
       </div>
