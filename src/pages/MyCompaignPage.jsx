@@ -3,14 +3,14 @@ import NavBar from '../components/layout/NavBar';
 import { compaigns } from '../static/data';
 import Compaign from '../components/compaign/Compaign';
 import { useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 
 const MyCompaignPage = () => {
   const projectsList = useSelector((state) => state.projectReducer.projects);
   const account = useSelector((state) => state.web3Reducer.account);
 
   const [projectsData, setProjectsData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(8);
+
   useEffect(() => {
     const myCompaign = projectsList?.filter(
       (compaign) => compaign.creator === account
@@ -24,7 +24,7 @@ const MyCompaignPage = () => {
 
       <div className="container py-24">
         <div className="grid gap-7 md:gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-          {projectsList?.map((item) => (
+          {projectsData?.map((item) => (
             <Compaign data={item} key={item.address} />
           ))}
         </div>

@@ -39,6 +39,7 @@ const CompaignDtails = ({ data, setPoPup }) => {
     };
     contribute(crowdFundingContract, data, dispatch, onSuccess, onError);
   };
+
   return (
     <div className="bg-white">
       <div className="fixed w-full h-screen top-0 left-0 bg-[#00000030] z-40 flex items-center justify-center">
@@ -50,7 +51,7 @@ const CompaignDtails = ({ data, setPoPup }) => {
           />
           <div className="lg:flex items-center lg:gap-8 ">
             <div className="w-full lg:w-[45%]">
-              <img src={data?.image} alt="" className="w-full object-contain" />
+              <img src={data?.image} alt="" className="w-full " />
             </div>
             <div className="w-full lg:w-[50%] space-y-2">
               <h2 className="text-2xl font-bold text-blue-600">
@@ -87,20 +88,6 @@ const CompaignDtails = ({ data, setPoPup }) => {
                     </td>
                   </tr>
                   <tr className="border  border-gray-200">
-                    <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2">
-                      Number Of Contributor
-                    </th>
-                    <td className="text-sm text-blue-600 text-center">0 </td>
-                  </tr>
-                  <tr className="border  border-gray-200">
-                    <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2">
-                      Current Amount
-                    </th>
-                    <td className="text-sm text-blue-600 text-center">
-                      {data?.currentAmount} ETH
-                    </td>
-                  </tr>
-                  <tr className="border  border-gray-200">
                     <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2   text-sm tracking-wide">
                       DeadLine
                     </th>
@@ -111,30 +98,57 @@ const CompaignDtails = ({ data, setPoPup }) => {
                 </tbody>
               </table>
 
-              <div>
-                <label
-                  htmlFor="contribute"
-                  className="block my-1 md:text-base lg:text-lg font-bold text-gray-600"
+              {data?.state === 'Successful' && data?.creator === account ? (
+                <button
+                  className="w-full py-2 shadow-md px-2 text-white border bg-primary hover:bg-traaa
+             hover:text-primary hover:bg-transparent hover:border-primary"
+                  onClick={() =>
+                    contributeAmount(data?.address, data?.minContribution)
+                  }
                 >
-                  Contribute
-                </label>
-                <input
-                  type="text"
-                  className="block w-full py-2 placeholder:text-gray-500 border focus:outline-none focus:border-primary focus:ring-0"
-                  onChange={(e) => {
-                    setAmount(e.target.value);
-                  }}
-                />
-              </div>
-              <button
-                className="w-full py-2 shadow-md px-2 text-white bg-primary hover:bg-traaa
-               hover:text-primary hover:border-primary"
-                onClick={() =>
-                  contributeAmount(data?.address, data?.minContribution)
-                }
-              >
-                Contribute
-              </button>
+                  Withdraw Request
+                </button>
+              ) : data?.state === 'Expired' ? (
+                <button
+                  className="w-full py-2 shadow-md px-2 text-white border bg-primary hover:bg-traaa
+         hover:text-primary hover:bg-transparent hover:border-primary"
+                  onClick={() =>
+                    contributeAmount(data?.address, data?.minContribution)
+                  }
+                >
+                  Refund Amount
+                </button>
+              ) : (
+                data?.state === 'Fundraising' && (
+                  <>
+                    <div>
+                      <label
+                        htmlFor="contribute"
+                        className="block my-1 md:text-base lg:text-lg font-bold text-gray-600"
+                      >
+                        Contribute
+                      </label>
+                      <input
+                        type="text"
+                        className="block w-full py-2 placeholder:text-gray-500 border focus:outline-none focus:border-primary focus:ring-0"
+                        onChange={(e) => {
+                          setAmount(e.target.value);
+                        }}
+                      />
+                    </div>
+
+                    <button
+                      className="w-full py-2 shadow-md px-2 text-white border bg-primary hover:bg-traaa
+         hover:text-primary hover:bg-transparent hover:border-primary"
+                      onClick={() =>
+                        contributeAmount(data?.address, data?.minContribution)
+                      }
+                    >
+                      Contribute
+                    </button>
+                  </>
+                )
+              )}
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ module.exports = {
     },
     polygon_mumbai: {
       url: 'https://rpc.ankr.com/polygon_mumbai',
-      accounts: [`your private key `],
+      accounts: [``],
     },
   },
 };

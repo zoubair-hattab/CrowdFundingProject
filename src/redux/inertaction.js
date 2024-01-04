@@ -11,7 +11,7 @@ import {
 } from './actions/web3Action';
 import { projectDataFormatter } from '../helper/helper';
 const crowdFundingContractAddress =
-  '0xA58F4C5139E22A534Dd9F484Bd0A0E7A46845E96';
+  '0xB3Cb80b84E898B221Bee4deFd746DEC0D1324081';
 export const loadCrowdFundingContract = async (web3, dispatch) => {
   try {
     if (web3) {

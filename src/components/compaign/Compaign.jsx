@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import CompaignDtails from './CompaignDtails.jsx';
 import CountDown from '../counter/CountDown.jsx';
+import { useSelector } from 'react-redux';
 const Compaign = ({ data }) => {
   const [days, hours, minutes, seconds] = CountDown(data?.deadline);
+  const { account } = useSelector((state) => state.web3Reducer);
   const [poPup, setPoPup] = useState(false);
+  const colorMaker = (state) => {
+    if (state === 'Fundraising') {
+      return 'bg-blue-500';
+    } else if (state === 'Expired') {
+      return 'bg-red-500';
+    } else {
+      return 'bg-emerald-500';
+    }
+  };
   return (
     <div className="shadow-md rounded-md  hover:bg-slate-50">
       <div className="w-full h-[150px]">
@@ -12,7 +23,7 @@ const Compaign = ({ data }) => {
       <div className="p-2 space-y-1">
         <div className="flex items-center justify-between">
           <h2 className=" text-lg font-medium text-blue-600">{data?.title}</h2>
-          <p className="text-white px-1 py-1 bg-green-500  rounded-md">
+          <p className={`text-white p-1 rounded-md ${colorMaker(data?.state)}`}>
             {data.state}
           </p>
         </div>
@@ -52,12 +63,36 @@ const Compaign = ({ data }) => {
           </p>
         </div>
       </div>
-      <button
-        className="py-2 bg-primary  text-white font-medium w-full shadow-md border  hover:bg-transparent hover:border-primary hover:text-primary"
-        onClick={() => setPoPup(true)}
-      >
-        Contribute
-      </button>
+
+      {data?.state === 'Successful' && data?.creator === account ? (
+        <button
+          className="py-2 bg-primary  text-white font-medium w-full shadow-md border  hover:bg-transparent hover:border-primary hover:text-primary"
+          onClick={() => setPoPup(true)}
+        >
+          Withdrawal request.
+        </button>
+      ) : data?.state === 'Successful' && data?.creator !== account ? (
+        <button
+          className="py-2 bg-primary  text-white font-medium w-full shadow-md border  hover:bg-transparent hover:border-primary hover:text-primary"
+          onClick={() => setPoPup(true)}
+        >
+          View Details.
+        </button>
+      ) : data?.state === 'Expired' ? (
+        <button
+          className="py-2 bg-primary  text-white font-medium w-full shadow-md border  hover:bg-transparent hover:border-primary hover:text-primary"
+          onClick={() => setPoPup(true)}
+        >
+          Refund Your Amount.
+        </button>
+      ) : (
+        <button
+          className="py-2 bg-primary  text-white font-medium w-full shadow-md border  hover:bg-transparent hover:border-primary hover:text-primary"
+          onClick={() => setPoPup(true)}
+        >
+          Contribute
+        </button>
+      )}
 
       {poPup && <CompaignDtails data={data} setPoPup={setPoPup} />}
     </div>

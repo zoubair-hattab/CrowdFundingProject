@@ -37,6 +37,11 @@ const Create = () => {
     ) {
       return toast.error('Please fill in the fields.');
     }
+    if (comaignInfo?.description.length < 60) {
+      return toast.error(
+        'Please provide a description longer than 60 characters.'
+      );
+    }
     const formData = new FormData();
     formData.append('file', file);
     const response = await axios.post(
