@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NavBar from '../components/layout/NavBar';
-import { compaigns } from '../static/data';
 import Compaign from '../components/compaign/Compaign';
 import { useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
 
 const MyCompaignPage = () => {
   const projectsList = useSelector((state) => state.projectReducer.projects);

@@ -24,7 +24,8 @@ const ContributionPage = () => {
           projectContracts &&
             projectContracts?.map(async (n) => ({
               value: n,
-              include: (await n?.methods.contributiors(account).call()) > 0,
+              include:
+                (await n?.methods.contributiors(account).call()).amount > 0,
             }))
         )
       )
@@ -36,7 +37,7 @@ const ContributionPage = () => {
   useEffect(() => {
     const load = async () => {
       const value = await data();
-
+      console.log(value);
       const myCompaign = projectsList?.filter((element) =>
         value?.includes(element.address)
       );

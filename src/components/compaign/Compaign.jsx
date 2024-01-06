@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import CompaignDtails from './CompaignDtails.jsx';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React from 'react';
 import CountDown from '../counter/CountDown.jsx';
-import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 const Compaign = ({ data }) => {
   const [days, hours, minutes, seconds] = CountDown(data?.deadline);
-  const { account } = useSelector((state) => state.web3Reducer);
-  const [poPup, setPoPup] = useState(false);
   const colorMaker = (state) => {
     if (state === 'Fundraising') {
       return 'bg-blue-500';
@@ -15,6 +13,7 @@ const Compaign = ({ data }) => {
       return 'bg-emerald-500';
     }
   };
+
   return (
     <div className="shadow-md rounded-md  hover:bg-slate-50">
       <div className="w-full h-[150px]">
@@ -59,42 +58,23 @@ const Compaign = ({ data }) => {
             DeadLine :
           </p>
           <p className="text-primary font-bold text-sm">
-            {days}d:{hours}h:{minutes}m:{seconds}s
+            {days + hours + minutes + seconds > 0 ? (
+              <>
+                {days}d:{hours}h:{minutes}m:{seconds}s
+              </>
+            ) : (
+              'Expired'
+            )}
           </p>
         </div>
       </div>
 
-      {data?.state === 'Successful' && data?.creator === account ? (
-        <button
-          className="py-2 bg-primary  text-white font-medium w-full shadow-md border  hover:bg-transparent hover:border-primary hover:text-primary"
-          onClick={() => setPoPup(true)}
-        >
-          Withdrawal request.
-        </button>
-      ) : data?.state === 'Successful' && data?.creator !== account ? (
-        <button
-          className="py-2 bg-primary  text-white font-medium w-full shadow-md border  hover:bg-transparent hover:border-primary hover:text-primary"
-          onClick={() => setPoPup(true)}
-        >
-          View Details.
-        </button>
-      ) : data?.state === 'Expired' ? (
-        <button
-          className="py-2 bg-primary  text-white font-medium w-full shadow-md border  hover:bg-transparent hover:border-primary hover:text-primary"
-          onClick={() => setPoPup(true)}
-        >
-          Refund Your Amount.
-        </button>
-      ) : (
-        <button
-          className="py-2 bg-primary  text-white font-medium w-full shadow-md border  hover:bg-transparent hover:border-primary hover:text-primary"
-          onClick={() => setPoPup(true)}
-        >
-          Contribute
-        </button>
-      )}
-
-      {poPup && <CompaignDtails data={data} setPoPup={setPoPup} />}
+      <Link
+        to={`/${data?.address}`}
+        className="block py-2 text-center bg-primary  text-white font-medium w-full shadow-md border  hover:bg-transparent hover:border-primary hover:text-primary"
+      >
+        View Details
+      </Link>
     </div>
   );
 };

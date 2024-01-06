@@ -50,6 +50,11 @@ export const projectReducer = (state = initialState, action) => {
         ...state,
         projects: updatedState,
       };
+    case types.INCREASE_NUMBER_CONTRIBUTOR:
+      return {
+        ...state,
+        contributor: action.payload,
+      };
     default:
       return state;
   }

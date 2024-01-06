@@ -60,6 +60,13 @@ export const amountContributor = (data) => {
   };
 };
 
+export const numberOfContributor = (data) => {
+  return {
+    type: types.INCREASE_NUMBER_CONTRIBUTOR,
+    payload: data,
+  };
+};
+
 export const withdrawContractBalance = (data) => {
   return {
     type: types.WITHDRAW_BALANCE,

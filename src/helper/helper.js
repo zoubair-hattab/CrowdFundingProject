@@ -1,12 +1,14 @@
 import Web3 from 'web3';
 import moment from 'moment';
 import {
+  numberOfContributor,
   walletAddressLoaded,
   walletNetworkLoaded,
   web3Loaded,
 } from '../redux/actions/web3Action';
 import { loadCrowdFundingContract } from '../redux/inertaction';
 import { toast } from 'react-toastify';
+import _ from 'lodash';
 
 export const weiToEther = (num) => {
   return Web3.utils.fromWei(num, 'ether');
@@ -36,6 +38,38 @@ export const projectDataFormatter = (data, contractAddress) => {
     image: data?.image,
   };
   return formattedData;
+};
+
+export const withdrawRequestDataFormatter = (data) => {
+  return {
+    requestId: data.requestId,
+    totalVote: data.noOfVotes,
+    amount: weiToEther(data.amount),
+    status: data.isCompleted ? 'Completed' : 'Pending',
+    desc: data.description,
+    reciptant: data.reciptent,
+  };
+};
+const formatContribution = (contributions) => {
+  const formattedData = contributions.map((data) => {
+    return {
+      contributor: data.contributorAddress,
+      amount: Number(weiToEther(data.amount)),
+    };
+  });
+  return formattedData;
+};
+export const groupContributors = (contributions, dispatch) => {
+  const contributorList = formatContribution(contributions);
+  const contributorGroup = _.map(
+    _.groupBy(contributorList, 'contributor'),
+    (o, address) => {
+      return { contributor: address, amount: _.sumBy(o, 'amount') };
+    }
+  );
+  dispatch(numberOfContributor(contributorGroup));
+
+  return contributorGroup;
 };
 const hexToDecimal = (hex) => parseInt(hex, 16);
 
@@ -92,7 +126,6 @@ export const currentWalletConnected = async (dispatch) => {
         const contract = await loadCrowdFundingContract(provider, dispatch);
         return { provider, contract };
       } else {
-        toast.error('Connect to MetaMask using the Connect button');
         const contract = await loadCrowdFundingContract(provider, dispatch);
         return { provider, contract };
       }

@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import CountDown from '../counter/CountDown';
 import { amountContributor } from '../../redux/actions/web3Action';
 import { toast } from 'react-toastify';
 import { etherToWei } from '../../helper/helper';
 import { useDispatch, useSelector } from 'react-redux';
-import { contribute } from '../../redux/inertaction';
+import {
+  contribute,
+  createWithdrawRequest,
+  getAllWithdrawRequest,
+  getContributors,
+} from '../../redux/inertaction';
 const CompaignDtails = ({ data, setPoPup }) => {
   const [days, hours, minutes, seconds] = CountDown(data?.deadline);
   const dispatch = useDispatch();
@@ -13,6 +18,9 @@ const CompaignDtails = ({ data, setPoPup }) => {
   const crowdFundingContract = useSelector(
     (state) => state.fundingReducer.contract
   );
+  const [contributors, setContributors] = useState(null);
+  const [withdrawReq, setWithdrawReq] = useState(null);
+  const web3 = useSelector((state) => state.web3Reducer.connection);
   const { account } = useSelector((state) => state.web3Reducer);
   const contributeAmount = (projectId, minContribution) => {
     if (!account) {
@@ -40,6 +48,42 @@ const CompaignDtails = ({ data, setPoPup }) => {
     contribute(crowdFundingContract, data, dispatch, onSuccess, onError);
   };
 
+  const requestForWithdraw = (projectId) => {
+    console.log(data?.goalAmount);
+    const contributionAmount = etherToWei(data?.goalAmount);
+    const datas = {
+      description: `${data?.goalAmount} ETH requested for withdraw`,
+      amount: contributionAmount,
+      recipient: account,
+      account: account,
+    };
+    const onSuccess = (datas) => {
+      toast.success(
+        `Successfully requested for withdraw ${data?.goalAmount} ETH`
+      );
+    };
+    const onError = (message) => {
+      toast.error(message);
+    };
+    createWithdrawRequest(web3, projectId, datas, onSuccess, onError);
+  };
+
+  useEffect(() => {
+    const onSuccess = (data) => {
+      setContributors(data);
+    };
+    const onError = (error) => {
+      console.log(error);
+    };
+
+    getContributors(web3, data?.address, onSuccess, onError);
+
+    const loadWithdrawRequests = (data) => {
+      setWithdrawReq(data);
+    };
+    getAllWithdrawRequest(web3, data?.address, loadWithdrawRequests);
+  }, [data?.address]);
+  console.log(withdrawReq);
   return (
     <div className="bg-white">
       <div className="fixed w-full h-screen top-0 left-0 bg-[#00000030] z-40 flex items-center justify-center">
@@ -89,6 +133,14 @@ const CompaignDtails = ({ data, setPoPup }) => {
                   </tr>
                   <tr className="border  border-gray-200">
                     <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2   text-sm tracking-wide">
+                      Number Of Contributor
+                    </th>
+                    <td className="text-sm text-blue-600 text-center">
+                      {contributors?.length}
+                    </td>
+                  </tr>
+                  <tr className="border  border-gray-200">
+                    <th className="bg-gray-50 border border-gray-200 text-left py-2 px-2   text-sm tracking-wide">
                       DeadLine
                     </th>
                     <td className="text-sm text-blue-600 text-center">
@@ -102,51 +154,58 @@ const CompaignDtails = ({ data, setPoPup }) => {
                 <button
                   className="w-full py-2 shadow-md px-2 text-white border bg-primary hover:bg-traaa
              hover:text-primary hover:bg-transparent hover:border-primary"
-                  onClick={() =>
-                    contributeAmount(data?.address, data?.minContribution)
-                  }
+                  onClick={() => requestForWithdraw(data?.address)}
                 >
                   Withdraw Request
                 </button>
               ) : data?.state === 'Expired' ? (
                 <button
                   className="w-full py-2 shadow-md px-2 text-white border bg-primary hover:bg-traaa
-         hover:text-primary hover:bg-transparent hover:border-primary"
-                  onClick={() =>
-                    contributeAmount(data?.address, data?.minContribution)
-                  }
+             hover:text-primary hover:bg-transparent hover:border-primary"
+                  onClick={() => requestForWithdraw(data?.address)}
                 >
                   Refund Amount
                 </button>
-              ) : (
-                data?.state === 'Fundraising' && (
-                  <>
-                    <div>
-                      <label
-                        htmlFor="contribute"
-                        className="block my-1 md:text-base lg:text-lg font-bold text-gray-600"
-                      >
-                        Contribute
-                      </label>
-                      <input
-                        type="text"
-                        className="block w-full py-2 placeholder:text-gray-500 border focus:outline-none focus:border-primary focus:ring-0"
-                        onChange={(e) => {
-                          setAmount(e.target.value);
-                        }}
-                      />
-                    </div>
-
-                    <button
-                      className="w-full py-2 shadow-md px-2 text-white border bg-primary hover:bg-traaa
-         hover:text-primary hover:bg-transparent hover:border-primary"
-                      onClick={() =>
-                        contributeAmount(data?.address, data?.minContribution)
-                      }
+              ) : data?.state === 'Fundraising' ? (
+                <>
+                  <div>
+                    <label
+                      htmlFor="contribute"
+                      className="block my-1 md:text-base lg:text-lg font-bold text-gray-600"
                     >
                       Contribute
-                    </button>
-                  </>
+                    </label>
+                    <input
+                      type="text"
+                      className="block w-full py-2 placeholder:text-gray-500 border focus:outline-none focus:border-primary focus:ring-0"
+                      onChange={(e) => {
+                        setAmount(e.target.value);
+                      }}
+                    />
+                  </div>
+
+                  <button
+                    className="w-full py-2 shadow-md px-2 text-white border bg-primary hover:bg-traaa
+                          hover:text-primary hover:bg-transparent hover:border-primary"
+                    onClick={() =>
+                      contributeAmount(data?.address, data?.minContribution)
+                    }
+                  >
+                    Contribute
+                  </button>
+                </>
+              ) : (
+                data?.state === 'Successful' &&
+                data?.creator !== account && (
+                  <button
+                    className="w-full py-2 shadow-md px-2 text-white border bg-primary hover:bg-traaa
+                       hover:text-primary hover:bg-transparent hover:border-primary"
+                    onClick={() =>
+                      contributeAmount(data?.address, data?.minContribution)
+                    }
+                  >
+                    Vote
+                  </button>
                 )
               )}
             </div>

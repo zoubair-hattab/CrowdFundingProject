@@ -4,6 +4,7 @@ import {
   CreatePage,
   ContributionPage,
   MyCompaignPage,
+  SingalCompaign,
 } from './routes/route.js';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -47,6 +48,8 @@ function App() {
           <Route path="create" element={<CreatePage />} />
           <Route path="create" element={<CreatePage />} />
           <Route path="my_compaigns" element={<MyCompaignPage />} />
+          <Route path=":id" element={<SingalCompaign />} />
+
           <Route path="my_contribution" element={<ContributionPage />} />
         </Route>
       </Routes>

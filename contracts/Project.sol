@@ -20,6 +20,10 @@ contract Project{
         bool isCompleted;
         address payable reciptent;
     }
+    struct Contributor{
+        address contributorAddress;
+        uint256 amount;
+    }
 
     // state Variables
 
@@ -34,9 +38,10 @@ contract Project{
     string public projectDes;
     string public imageHash;
     State public state = State.Fundraising; 
-    mapping (address => uint) public contributiors;
+    mapping (address => Contributor) public contributiors;
     mapping (uint256 => WithdrawRequest) public withdrawRequests;
     uint256 public numOfWithdrawRequests = 0;
+    Contributor  [] private arrayOfContributor;
     // Modifiers
     modifier isCreator(){
         require(msg.sender == creator,'You dont have access to perform this operation !');
@@ -102,11 +107,32 @@ contract Project{
     function contribute(address _contributor) public validateExpiry(State.Fundraising) payable {
         require(msg.value >= minimumContribution,'Contribution amount is too low !');
         require(msg.value+raisedAmount<= targetContribution,'The received amount is less than the amount sent.');
-        if(contributiors[_contributor] == 0){
+          bool found = false;
+        if(contributiors[_contributor].amount == 0){
             noOfContributers++;
+            contributiors[_contributor].contributorAddress= _contributor;
+
         }
-        contributiors[_contributor] += msg.value;
+        contributiors[_contributor].amount += msg.value;
         raisedAmount += msg.value;
+        // Check if the struct exists in the array
+        for (uint256 i = 0; i < arrayOfContributor.length; i++) {
+                            console.log(arrayOfContributor[i].contributorAddress);
+
+            if (arrayOfContributor[i].contributorAddress == _contributor) {
+                // Struct exists, update it
+                arrayOfContributor[i].amount =   contributiors[_contributor].amount;
+                found = true;
+                break;
+            }
+        }
+        // If the struct doesn't exist, add it to the array
+        if (!found) {
+        arrayOfContributor.push( contributiors[_contributor]);
+        }
+
+
+
         emit FundingReceived(_contributor,msg.value,raisedAmount);
         checkFundingCompleteOrExpire();
     }
@@ -133,10 +159,10 @@ contract Project{
     // @return boolean
 
     function requestRefund() public validateExpiry(State.Expired) returns(bool) {
-        require(contributiors[msg.sender] > 0,'You dont have any contributed amount !');
+        require(contributiors[msg.sender].amount > 0,'You dont have any contributed amount !');
         address payable user = payable(msg.sender);
-        user.transfer(contributiors[msg.sender]);
-        contributiors[msg.sender] = 0;
+        user.transfer(contributiors[msg.sender].amount);
+        contributiors[msg.sender].amount = 0;
         return true;
     }
 
@@ -160,7 +186,7 @@ contract Project{
     // @return null
 
     function voteWithdrawRequest(uint256 _requestId) public {
-        require(contributiors[msg.sender] > 0,'Only contributor can vote !');
+        require(contributiors[msg.sender].amount > 0,'Only contributor can vote !');
         WithdrawRequest storage requestDetails = withdrawRequests[_requestId];
         require(requestDetails.voters[msg.sender] == false,'You already voted !');
         requestDetails.voters[msg.sender] = true;
@@ -217,6 +243,9 @@ contract Project{
         balance=address(this).balance;
         image=imageHash;
     }
+    function returnAllContributor() external view returns(Contributor[] memory){
+   return arrayOfContributor;
+}
 
 
 }
