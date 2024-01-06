@@ -24,7 +24,7 @@ const Hero = () => {
             href="shop.html"
             className="bg-primary border border-primary text-white px-8 py-3 font-medium rounded-md uppercase hover:bg-transparent hover:text-primary transition"
           >
-            Contribute now
+            Help us
           </a>
         </div>
       </div>

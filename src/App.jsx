@@ -5,6 +5,9 @@ import {
   ContributionPage,
   MyCompaignPage,
   SingalCompaign,
+  ServicesPage,
+  AboutPage,
+  ContractPage,
 } from './routes/route.js';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -51,6 +54,9 @@ function App() {
           <Route path=":id" element={<SingalCompaign />} />
 
           <Route path="my_contribution" element={<ContributionPage />} />
+          <Route path="services" element={<ServicesPage />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="contact" element={<ContractPage />} />
         </Route>
       </Routes>
       <ToastContainer

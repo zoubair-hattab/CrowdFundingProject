@@ -18,7 +18,7 @@ import {
 } from '../helper/helper';
 import { toast } from 'react-toastify';
 const crowdFundingContractAddress =
-  '0xDCC820f15d0867f5c3aa73Dd92FF416D6BECB685';
+  '0xA5736280eD01f32526A08954d6Dd0a37f6ab44dc';
 export const loadCrowdFundingContract = async (web3, dispatch) => {
   try {
     if (web3) {
