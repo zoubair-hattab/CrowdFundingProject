@@ -58,6 +58,7 @@ const Create = () => {
     );
 
     const unixDate = moment(comaignInfo?.deadline).valueOf();
+
     const onSuccess = () => {
       setCompaignInfo({});
       toast.success('Fund rising started 🎉');
@@ -69,7 +70,7 @@ const Create = () => {
     };
     const data = {
       minimumContribution: etherToWei(comaignInfo?.minprice),
-      deadline: Number(unixDate),
+      deadline: Math.floor(unixDate / 1000),
       targetContribution: etherToWei(comaignInfo?.price),
       projectTitle: comaignInfo?.title,
       projectDesc: comaignInfo?.description,
